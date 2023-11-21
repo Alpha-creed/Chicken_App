@@ -1,0 +1,1 @@
+export const EmailIcon = <i class="ri-mail-fill"></i>
