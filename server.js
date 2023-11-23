@@ -8,14 +8,16 @@ require("dotenv").config();
 
 const userRoute = require("./routes/userRoutes")
 
-//middleware
-app.use(cors(corsOption))
 var corsOption={
     origin:"http://localhost:3000"
 }
-app.use(express.json())
-app.use(bodyParser.urlencoded({extended:true}))
 
+//middleware
+app.use(cors(corsOption))
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
+//Routes
 app.use("/api/user",userRoute)
 
 const server=()=>{

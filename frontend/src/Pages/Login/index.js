@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from 'styled-components'
 import login from '../../components/Assest/login.jpg'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import email from '../../components/Assest/mail-fill.png'
 import { MailOutlined,LockOutlined } from '@ant-design/icons'
 import { EmailIcon } from '../../components/Assest/icons/icons'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setLoader } from '../../redux/loaderSlice'
+import { LoginUser } from '../../apicalls/users'
 
 const rules=[
     {
@@ -46,6 +49,29 @@ function Login() {
     `
     const Footer=styled.div``
 
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const onFinish=async(values)=>{
+      try {
+        dispatch(setLoader(true))
+        const response = await LoginUser(values)
+        dispatch(setLoader(false))
+        if(response.success){
+          message.success(response.message)
+          localStorage.setItem("token",response.data)
+          window.location.href='/'
+        }else{
+          throw new Error(response.message)
+        }
+      } catch (error) {
+        message.error(error.message)
+      }
+    }
+    useEffect(()=>{
+      if(localStorage.getItem("token")){
+        navigate('/')
+      }
+    },[])
   return (
     <Overlay>
     <MainWrapper>
@@ -55,7 +81,7 @@ function Login() {
             LOGIN
         </Title>
       </h3>
-      <Form>
+      <Form layout='vertical' onFinish={onFinish}>
         <Form.Item label={<label style={{ color: "white" }}>Email</label>} name="email" rules={rules}>
         <Input placeholder='Email' prefix={<MailOutlined />}/>
         </Form.Item>
@@ -63,7 +89,7 @@ function Login() {
         <Input placeholder='Password' type='password' prefix={<LockOutlined />}/>
         </Form.Item>
         <BtnCover>
-            <Button >
+            <Button  htmlType='submit'>
                 Login
             </Button>
         </BtnCover>

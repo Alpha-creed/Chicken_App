@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from 'styled-components'
 import reg from '../../components/Assest/register.jpg'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import email from '../../components/Assest/mail-fill.png'
 import { MailOutlined,LockOutlined } from '@ant-design/icons'
 import { EmailIcon } from '../../components/Assest/icons/icons'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setLoader } from '../../redux/loaderSlice'
+import { RegisterUser } from '../../apicalls/users'
 
 const rules=[
     {
@@ -46,6 +49,29 @@ function Register() {
     `
     const Footer=styled.div``
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const onFinish=async(values)=>{
+    try {
+      dispatch(setLoader(true))
+      const response = await RegisterUser(values)
+      dispatch(setLoader(false))
+      if(response.success){
+        navigate('/login')
+        message.success(response.message)
+      }else{
+        throw new Error(response.message)
+      }
+    } catch (error) {
+      dispatch(setLoader(false))
+      message.error(error.message)
+    }
+  }
+  useEffect(()=>{
+    if(localStorage.getItem("token"))
+    navigate("/")
+  },[])
+
   return (
     <Overlay>
     <MainWrapper>
@@ -55,7 +81,7 @@ function Register() {
             Register
         </Title>
       </h3>
-      <Form>
+      <Form layout="vertical" onFinish={onFinish}>
         <Form.Item label={"Name"} name="name" rules={rules} >
         <Input placeholder='name' prefix={<MailOutlined />}/>
         </Form.Item>
@@ -66,7 +92,7 @@ function Register() {
         <Input placeholder='Password' type='password' prefix={<LockOutlined />}/>
         </Form.Item>
         <BtnCover>
-            <Button >
+            <Button  htmlType='submit' block>
                 Register
             </Button>
         </BtnCover>
