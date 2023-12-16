@@ -4,7 +4,7 @@ import About from '../../components/About'
 import Banner from '../../components/Banner'
 import Navbar from '../../components/Navbar'
 
-function Home() {
+const Home=()=> {
     const Overlay = styled.div`
 
     `

@@ -6,6 +6,7 @@ const bodyParser = require("body-parser")
 const cors = require("cors")
 require("dotenv").config();
 
+const ProductRoute = require("./routes/productRoutes")
 const userRoute = require("./routes/userRoutes")
 
 var corsOption={
@@ -19,6 +20,7 @@ app.use(express.urlencoded({extended:true}))
 
 //Routes
 app.use("/api/user",userRoute)
+app.use("/api/product",ProductRoute);
 
 const server=()=>{
     db()

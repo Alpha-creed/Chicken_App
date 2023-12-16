@@ -76,7 +76,10 @@ router.get("/get-current-user",authMiddleware,async(req,res)=>{
             data:user,
         })
     } catch (error) {
-        
+        res.send({
+            success:false,
+            message:error.message,
+        })
     }
 })
 

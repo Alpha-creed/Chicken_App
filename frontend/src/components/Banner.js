@@ -48,7 +48,7 @@ function Banner() {
         <Text text={"Get Started Today"} color={"red"} fontSize={"20px"}/>
         <BtnAnMenu>
         <Button type='primary' ghost>Order Now</Button>
-        <Text text={"See Menu"} color={"Yellow"} fontSize={"20px"}/>
+        <Text locate="/menu" text={"See Menu"} color={"Yellow"} fontSize={"20px"} />
         </BtnAnMenu>
       </LeftSide>
       <RightSide src={Img}/>
